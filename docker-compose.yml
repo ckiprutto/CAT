@@ -1,0 +1,39 @@
+services:
+  backend:
+    image: ckiprutto/yolo-backend:v1.0.0
+    container_name: yolo_backend
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/yolomy
+    depends_on:
+      - mongo
+    networks:
+      - yolo_network
+
+  frontend:
+    image: ckiprutto/yolo-frontend:v1.0.0
+    container_name: yolo_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - yolo_network
+
+  mongo:
+    image: mongo:7
+    container_name: yolo_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - yolo_network
+
+volumes:
+  mongo_data:
+
+networks:
+  yolo_network:
+    driver: bridge
